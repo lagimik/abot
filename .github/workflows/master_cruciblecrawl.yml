@@ -3,7 +3,7 @@
 
 name: Build and deploy dotnet core app to Azure Function App - CrucibleCrawl
 
-on: 
+on: |+
   push:
     branches:
       - master
@@ -38,9 +38,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A799DD60CAF4487686C25A581319AC3C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_806646C735854C88AF8899C201A580AE }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_88FFEA645DDF4103AB379D2B9D1B3D41 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6E9C20DE6E2041538FE4FCAB295B74B5 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_60281FA75C524082BE0C104868DC6704 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_30B1738DA3A240D59695F75CA93E0840 }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
