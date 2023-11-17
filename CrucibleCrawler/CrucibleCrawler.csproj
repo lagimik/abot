@@ -15,4 +15,9 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abot2\Abot2.csproj" />
+  </ItemGroup>
+  
 </Project>
