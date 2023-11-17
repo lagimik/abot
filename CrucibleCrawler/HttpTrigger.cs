@@ -37,10 +37,12 @@ namespace CrucibleCrawler.Function
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
             
             if (! string.IsNullOrEmpty(url)) {
+                log.LogInformation("Crawling: " + url);
                 var pageRequester = new PageRequester(new CrawlConfiguration(), new WebContentExtractor());
                 var crawledPage = await pageRequester.MakeRequestAsync(new Uri(url));
 
-                 // Write to blob storage using blob storage writer and applications settings    
+                 // Write to blob storage using blob storage writer and applications settings
+                log.LogInformation("Writing to: " + Environment.GetEnvironmentVariable("BlobSASURL") + Environment.GetEnvironmentVariable("BlobSASToken") + Environment.GetEnvironmentVariable("BlobContainerName"));    
                 var blobStorageWriter = new BlobStorageWriter(Environment.GetEnvironmentVariable("BlobSASURL"), Environment.GetEnvironmentVariable("BlobSASToken")); 
                 await blobStorageWriter.WriteStringToBlobAsync(Environment.GetEnvironmentVariable("BlobContainerName"), url, crawledPage.Content.Text);
             }
