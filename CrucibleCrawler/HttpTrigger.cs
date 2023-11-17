@@ -10,10 +10,10 @@ using Newtonsoft.Json;
 using Abot2.Core;
 using Abot2.Crawler;
 using Abot2.Poco;
+using CrucibleCrawler.Blob;
 
 
-
-namespace Abot.Function
+namespace CrucibleCrawler.Function
 {
     public static class HttpTrigger
     {
@@ -39,9 +39,14 @@ namespace Abot.Function
             if (! string.IsNullOrEmpty(url)) {
                 var pageRequester = new PageRequester(new CrawlConfiguration(), new WebContentExtractor());
                 var crawledPage = await pageRequester.MakeRequestAsync(new Uri(url));
-                responseMessage += crawledPage.Content.Text;
+
+                 // Write to blob storage using blob storage writer and applications settings    
+                var blobStorageWriter = new BlobStorageWriter(Environment.GetEnvironmentVariable("BlobSASURL"), Environment.GetEnvironmentVariable("BlobSASToken")); 
+                await blobStorageWriter.WriteStringToBlobAsync(Environment.GetEnvironmentVariable("BlobContainerName"), url, crawledPage.Content.Text);
             }
             
+           
+
 
             return new OkObjectResult(responseMessage);
         }
