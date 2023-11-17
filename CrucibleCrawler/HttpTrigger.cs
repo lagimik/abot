@@ -25,21 +25,23 @@ namespace Abot.Function
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
+            string url = req.Query["url"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
 
-            var pageRequester = new PageRequester(new CrawlConfiguration(), new WebContentExtractor());
-
-            var crawledPage = await pageRequester.MakeRequestAsync(new Uri("http://google.com"));
-
-
+       
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
             
-            responseMessage += crawledPage.Content.Text;
+            if (! string.IsNullOrEmpty(url)) {
+                var pageRequester = new PageRequester(new CrawlConfiguration(), new WebContentExtractor());
+                var crawledPage = await pageRequester.MakeRequestAsync(new Uri(url));
+                responseMessage += crawledPage.Content.Text;
+            }
+            
 
             return new OkObjectResult(responseMessage);
         }
