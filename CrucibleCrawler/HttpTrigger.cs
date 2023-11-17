@@ -44,7 +44,16 @@ namespace CrucibleCrawler.Function
                  // Write to blob storage using blob storage writer and applications settings
                 log.LogInformation("Writing to: " + Environment.GetEnvironmentVariable("BlobSASURL") + Environment.GetEnvironmentVariable("BlobSASToken") + Environment.GetEnvironmentVariable("BlobContainerName"));    
                 var blobStorageWriter = new BlobStorageWriter(Environment.GetEnvironmentVariable("BlobSASURL"), Environment.GetEnvironmentVariable("BlobSASToken")); 
-                await blobStorageWriter.WriteStringToBlobAsync(Environment.GetEnvironmentVariable("BlobContainerName"), url, crawledPage.Content.Text);
+                
+                //try to write to blobStorageWriter.WriteStringToBlobAsync and catch any exceptions
+                try {
+                    await blobStorageWriter.WriteStringToBlobAsync(Environment.GetEnvironmentVariable("BlobContainerName"), url, crawledPage.Content.Text);
+                }
+                catch (Exception e) {
+                    log.LogInformation("Error writing to blob storage: " + e.Message);
+                    responseMessage = "Error writing to blob storage: " + e.Message;
+                }	
+
             }
             
            

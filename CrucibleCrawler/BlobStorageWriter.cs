@@ -19,6 +19,20 @@ namespace CrucibleCrawler.Blob
         
         public async Task WriteStringToBlobAsync(string containerName, string blobName, string content)
         {
+            if (string.IsNullOrEmpty(containerName))
+            {
+                throw new ArgumentException($"'{nameof(containerName)}' cannot be null or empty.", nameof(containerName));
+            }
+
+            if (string.IsNullOrEmpty(blobName))
+            {
+                throw new ArgumentException($"'{nameof(blobName)}' cannot be null or empty.", nameof(blobName));
+            }
+
+            if (string.IsNullOrEmpty(content))
+            {
+                throw new ArgumentException($"'{nameof(content)}' cannot be null or empty.", nameof(content));
+            }
             // Create a BlobServiceClient using the blob URL and SAS token
             BlobServiceClient blobServiceClient = new BlobServiceClient(new Uri($"{_blobUrl}?{_sasToken}"), null);
 
