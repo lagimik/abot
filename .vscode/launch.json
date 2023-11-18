@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Abot2.Demo/bin/Debug/netcoreapp2.1/Abot2.Demo.dll",
+            "program": "${workspaceFolder}/Abot2.Demo/bin/Debug/net6.0/Abot2.Demo.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Abot2.Demo",
             "console": "internalConsole",

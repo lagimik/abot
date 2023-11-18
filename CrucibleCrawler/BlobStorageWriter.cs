@@ -1,6 +1,7 @@
 using Azure.Core;
 using Azure.Storage;
 using Azure.Storage.Blobs;
+using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Extensions.Msal;
 using System;
 using System.IO;
@@ -10,15 +11,12 @@ namespace CrucibleCrawler.Blob
 {
     public class BlobStorageWriter
     {
-        private string _blobUrl;
-        private string _sasToken;
-        private string _storageAccountName;
+        private string _blobConnectionString;
 
-        public BlobStorageWriter(string blobUrl, string blobStorageAccountName, string sasToken)
+        public BlobStorageWriter(string blobConnectionString)
         {
-            _blobUrl = blobUrl;
-            _storageAccountName = blobStorageAccountName;
-            _sasToken = sasToken;
+            _blobConnectionString = blobConnectionString;
+           
         }
 
         
@@ -40,7 +38,9 @@ namespace CrucibleCrawler.Blob
             }
             
             // Create a BlobServiceClient using the service URL and SAS token
-            BlobServiceClient blobServiceClient = new BlobServiceClient(new Uri(_blobUrl), new StorageSharedKeyCredential(_storageAccountName, _sasToken));
+            BlobServiceClient blobServiceClient = new BlobServiceClient(_blobConnectionString);
+
+            BlobClient blobClient = new BlobClient(_blobConnectionString, containerName, blobName);
 
 
             // Get a reference to the container
@@ -49,17 +49,15 @@ namespace CrucibleCrawler.Blob
             // Create the container if it doesn't exist
             await containerClient.CreateIfNotExistsAsync();
 
-            // Get a reference to the blob
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            //write the string content to the blob using BlobServiceClient
+            
+            //await blobClient.UploadAsync(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content)), true);
+            await blobClient.UploadAsync(BinaryData.FromString(content), overwrite: true);
 
-            // Convert the string content to a byte array
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(content);
+           
+            
 
-            // Upload the byte array to the blob
-            using (MemoryStream stream = new MemoryStream(byteArray))
-            {
-                await blobClient.UploadAsync(stream, true);
-            }
+            
         }
     }
 }

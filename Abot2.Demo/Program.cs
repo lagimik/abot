@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Abot2.Core;
 using Abot2.Crawler;
 using Abot2.Poco;
+using AngleSharp;
 using Serilog;
 using Serilog.Formatting.Json;
+using CrucibleCrawler.Blob;
+using Microsoft.Extensions.Logging;
+
 
 namespace Abot2.Demo
 {
@@ -22,10 +27,44 @@ namespace Abot2.Demo
             Log.Information("Demo starting up!");
 
             //await DemoPageRequester();
-            await DemoSimpleCrawler();
+            //await DemoSimpleCrawler();
+
+            await CrucibleCrawlerTest();
+          
 
             Log.Information("Demo done!");
-            Console.ReadKey();
+            
+        }
+
+        private static async Task CrucibleCrawlerTest()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.WithThreadId()
+                .WriteTo.Console(outputTemplate: Constants.LogFormatTemplate)
+                .CreateLogger();
+
+            Log.Information("CrucibleCrawl Starting!");
+
+            var url = "https://lagimik.github.io/PartnerCrucible/PracticeBuilding";
+
+            var pageRequester = new PageRequester(new CrawlConfiguration(), new WebContentExtractor());
+            var crawledPage = await pageRequester.MakeRequestAsync(new Uri(url));
+
+            // Write to blob storage using blob storage writer and applications settings
+            
+            var blobStorageWriter = new BlobStorageWriter("DefaultEndpointsProtocol=https;AccountName=partnercrucibl7572430794;AccountKey=xFeg7oUK1iOpLWBSm9h7+nTqpdCFLIu3cS9XZuH1EmJv+btwkbW1hhspsVOZvbMn6v2q9oaTjft/+ASt4HsPkA==;EndpointSuffix=core.windows.net"); 
+
+            //try to write to blobStorageWriter.WriteStringToBlobAsync and catch any exceptions
+            try {
+               await blobStorageWriter.WriteStringToBlobAsync("cruciblecrawl", url, crawledPage.Content.Text);
+    
+               
+            }
+            catch (Exception e) {
+                Log.Error("Error writing to blob storage: " + e.Message);
+                
+            }	
         }
 
         private static async Task DemoSimpleCrawler()
