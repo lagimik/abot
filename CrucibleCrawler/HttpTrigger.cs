@@ -47,7 +47,9 @@ namespace CrucibleCrawler.Function
                 
                 //try to write to blobStorageWriter.WriteStringToBlobAsync and catch any exceptions
                 try {
-                    await blobStorageWriter.WriteStringToBlobAsync(Environment.GetEnvironmentVariable("BlobContainerName"), url, crawledPage.Content.Text);
+                    Uri uri = new Uri(url);
+                    string blobName = uri.Host + uri.Segments[uri.Segments.Length - 1];
+                    await blobStorageWriter.WriteStringToBlobAsync(Environment.GetEnvironmentVariable("BlobContainerName"), blobName, crawledPage.Content.Text);
                 }
                 catch (Exception e) {
                     log.LogInformation("Error writing to blob storage: " + e.Message);
