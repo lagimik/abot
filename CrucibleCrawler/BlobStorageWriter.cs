@@ -1,4 +1,7 @@
+using Azure.Core;
+using Azure.Storage;
 using Azure.Storage.Blobs;
+using Microsoft.Identity.Client.Extensions.Msal;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,12 +10,14 @@ namespace CrucibleCrawler.Blob
 {
     public class BlobStorageWriter
     {
-        private readonly string _blobUrl;
-        private readonly string _sasToken;
+        private string _blobUrl;
+        private string _sasToken;
+        private string _storageAccountName;
 
-        public BlobStorageWriter(string blobUrl, string sasToken)
+        public BlobStorageWriter(string blobUrl, string blobStorageAccountName, string sasToken)
         {
             _blobUrl = blobUrl;
+            _storageAccountName = blobStorageAccountName;
             _sasToken = sasToken;
         }
 
@@ -33,8 +38,10 @@ namespace CrucibleCrawler.Blob
             {
                 throw new ArgumentException($"'{nameof(content)}' cannot be null or empty.", nameof(content));
             }
-            // Create a BlobServiceClient using the blob URL and SAS token
-            BlobServiceClient blobServiceClient = new BlobServiceClient(new Uri($"{_blobUrl}?{_sasToken}"), null);
+            
+            // Create a BlobServiceClient using the service URL and SAS token
+            BlobServiceClient blobServiceClient = new BlobServiceClient(new Uri(_blobUrl), new StorageSharedKeyCredential(_storageAccountName, _sasToken));
+
 
             // Get a reference to the container
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
