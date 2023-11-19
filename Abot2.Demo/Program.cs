@@ -30,10 +30,10 @@ namespace Abot2.Demo
             //await DemoSimpleCrawler();
 
             await CrucibleCrawlerTest();
-          
+
 
             Log.Information("Demo done!");
-            
+
         }
 
         private static async Task CrucibleCrawlerTest()
@@ -46,25 +46,27 @@ namespace Abot2.Demo
 
             Log.Information("CrucibleCrawl Starting!");
 
-            var url = "https://lagimik.github.io/PartnerCrucible/PracticeBuilding";
+           //var url = "https://lagimik.github.io/PartnerCrucible/PracticeBuilding";
+            var url = "https://tools.totaleconomicimpact.com/go/microsoft/AzureServicesPartner//docs/MicrosoftAzure_ServicesPartners_CaseStudy.pdf";
 
             var pageRequester = new PageRequester(new CrawlConfiguration(), new WebContentExtractor());
             var crawledPage = await pageRequester.MakeRequestAsync(new Uri(url));
 
             // Write to blob storage using blob storage writer and applications settings
-            
-            var blobStorageWriter = new BlobStorageWriter(""); 
+
+            var blobStorageWriter = new BlobStorageWriter("");
 
             //try to write to blobStorageWriter.WriteStringToBlobAsync and catch any exceptions
             try {
-               await blobStorageWriter.WriteStringToBlobAsync("cruciblecrawl", url, crawledPage.Content.Text);
-    
-               
+               //await blobStorageWriter.WriteStringToBlobAsync("cruciblecrawl", url, crawledPage.Content.Text);
+               await blobStorageWriter.WriteBytesToBlobAsync("cruciblecrawl", url, crawledPage.Content.Bytes);
+
+
             }
             catch (Exception e) {
                 Log.Error("Error writing to blob storage: " + e.Message);
-                
-            }	
+
+            }
         }
 
         private static async Task DemoSimpleCrawler()
@@ -83,7 +85,7 @@ namespace Abot2.Demo
 
         private static void Crawler_PageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
-            
+
         }
 
         private static async Task DemoPageRequester()

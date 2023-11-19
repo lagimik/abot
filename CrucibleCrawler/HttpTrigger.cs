@@ -31,20 +31,22 @@ namespace CrucibleCrawler.Function
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
 
-       
+
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
-            
+
             if (! string.IsNullOrEmpty(url)) {
                 log.LogInformation("Crawling: " + url);
                 var pageRequester = new PageRequester(new CrawlConfiguration(), new WebContentExtractor());
                 var crawledPage = await pageRequester.MakeRequestAsync(new Uri(url));
 
-                 // Write to blob storage using blob storage writer and applications settings
-                log.LogInformation("Writing to: " + Environment.GetEnvironmentVariable("BlobConnectionString"));    
-                var blobStorageWriter = new BlobStorageWriter(Environment.GetEnvironmentVariable("BlobConnectionString")); 
-                
+                // Write to blob storage using blob storage writer and applications settings
+                log.LogInformation("Writing to: " + Environment.GetEnvironmentVariable("BlobConnectionString"));
+                var blobStorageWriter = new BlobStorageWriter(Environment.GetEnvironmentVariable("BlobConnectionString"));
+
+                log.LogInformation("Content Encoding: " + crawledPage.Content.Encoding);
+
                 Uri uri = new Uri(url);
                 string blobName = uri.Host + uri.Segments[uri.Segments.Length - 1];
 
@@ -55,11 +57,11 @@ namespace CrucibleCrawler.Function
                 catch (Exception e) {
                     log.LogInformation("Error writing to blob storage: blob name: " + blobName + "Error: " + e.Message);
                     responseMessage = "Error writing to blob storage: blob name: " + blobName + "Error: " + e.Message;
-                }	
+                }
 
             }
-            
-           
+
+
 
 
             return new OkObjectResult(responseMessage);

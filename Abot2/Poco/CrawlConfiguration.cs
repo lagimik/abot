@@ -2,7 +2,7 @@
 
 namespace Abot2.Poco
 {
-    public class CrawlConfiguration 
+    public class CrawlConfiguration
     {
         public CrawlConfiguration()
         {
@@ -10,7 +10,7 @@ namespace Abot2.Poco
             UserAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
             RobotsDotTextUserAgentString = "abot";
             MaxPagesToCrawl = 1000;
-            DownloadableContentTypes = "text/html";
+            DownloadableContentTypes = "text/html,application/pdf";
             ConfigurationExtensions = new Dictionary<string, string>();
             MaxRobotsDotTextCrawlDelayInSeconds = 5;
             HttpRequestMaxAutoRedirects = 7;
@@ -29,7 +29,7 @@ namespace Abot2.Poco
         public int MaxConcurrentThreads { get; set; }
 
         /// <summary>
-        /// Maximum number of pages to crawl. 
+        /// Maximum number of pages to crawl.
         /// If zero, this setting has no effect
         /// </summary>
         public int MaxPagesToCrawl { get; set; }
@@ -52,12 +52,12 @@ namespace Abot2.Poco
         public string UserAgentString { get; set; }
 
         /// <summary>
-        /// The http protocol version number to use during http requests. Currently supporting values "1.1" and "1.0". 
+        /// The http protocol version number to use during http requests. Currently supporting values "1.1" and "1.0".
         /// </summary>
         public HttpProtocolVersion HttpProtocolVersion { get; set; }
 
         /// <summary>
-        /// Maximum seconds before the crawl times out and stops. 
+        /// Maximum seconds before the crawl times out and stops.
         /// If zero, this setting has no effect.
         /// </summary>
         public int CrawlTimeoutSeconds { get; set; }
@@ -217,7 +217,7 @@ namespace Abot2.Poco
         public int MinCrawlDelayPerDomainMilliSeconds { get; set; }
 
         /// <summary>
-        /// The maximum numer of seconds to respect in the robots.txt "Crawl-delay: X" directive. 
+        /// The maximum numer of seconds to respect in the robots.txt "Crawl-delay: X" directive.
         /// IsRespectRobotsDotTextEnabled must be true for this value to be used.
         /// If zero, will use whatever the robots.txt crawl delay requests no matter how high the value is.
         /// </summary>
