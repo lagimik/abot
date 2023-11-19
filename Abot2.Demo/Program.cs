@@ -53,7 +53,7 @@ namespace Abot2.Demo
 
             // Write to blob storage using blob storage writer and applications settings
             
-            var blobStorageWriter = new BlobStorageWriter("DefaultEndpointsProtocol=https;AccountName=partnercrucibl7572430794;AccountKey=xFeg7oUK1iOpLWBSm9h7+nTqpdCFLIu3cS9XZuH1EmJv+btwkbW1hhspsVOZvbMn6v2q9oaTjft/+ASt4HsPkA==;EndpointSuffix=core.windows.net"); 
+            var blobStorageWriter = new BlobStorageWriter(""); 
 
             //try to write to blobStorageWriter.WriteStringToBlobAsync and catch any exceptions
             try {
