@@ -4,6 +4,7 @@ using Azure.Storage.Blobs;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Extensions.Msal;
 using System;
+using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -19,7 +20,19 @@ namespace CrucibleCrawler.Blob
            
         }
 
-        
+        private string RemoveSpecialCharacters(string str) {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (char c in str) {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '-' ) {
+                    sb.Append(c);
+                } else {
+                    sb.Append("-");
+                }
+            }
+            return sb.ToString();
+        }
+
         public async Task WriteStringToBlobAsync(string containerName, string blobName, string content)
         {
             if (string.IsNullOrEmpty(containerName))
@@ -40,7 +53,7 @@ namespace CrucibleCrawler.Blob
             // Create a BlobServiceClient using the service URL and SAS token
             BlobServiceClient blobServiceClient = new BlobServiceClient(_blobConnectionString);
 
-            BlobClient blobClient = new BlobClient(_blobConnectionString, containerName, blobName);
+            BlobClient blobClient = new BlobClient(_blobConnectionString, containerName, RemoveSpecialCharacters(blobName));
 
 
             // Get a reference to the container
