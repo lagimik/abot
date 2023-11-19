@@ -15,10 +15,12 @@ namespace Abot2.Poco
             MaxRobotsDotTextCrawlDelayInSeconds = 5;
             HttpRequestMaxAutoRedirects = 7;
             IsHttpRequestAutoRedirectsEnabled = true;
-            MaxCrawlDepth = 100;
+            MaxCrawlDepth = 10;
             HttpServicePointConnectionLimit = 200;
             HttpRequestTimeoutInSeconds = 15;
             IsSslCertificateValidationEnabled = false;
+            IsExternalPageCrawlingEnabled = true;
+            IsExternalPageLinksCrawlingEnabled = false;
         }
 
         #region crawlBehavior
